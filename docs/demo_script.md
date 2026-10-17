@@ -1,6 +1,6 @@
 # SignalFlow AI - Video Demonstration Script
 **Target Duration:** Under 2 minutes 45 seconds (2:30 planned)
-**Hackathon Tags:** `#strands-decider-2b` `#policy`
+**Core Tags:** `#strands-decider-2b` `#policy` `#google-gemini` `#fintech`
 
 ---
 
@@ -8,7 +8,7 @@
 
 | Timestamp | Visual Screen | Voiceover / Action | Key Point Demonstrated |
 |---|---|---|---|
-| **0:00 - 0:25** | Terminal showing `streamlit run app.py` and Dashboard Home Page | "Welcome to SignalFlow AI, a real-time financial news intelligence pipeline built for the AWS Agent Experience Hackathon featuring Strands Decider 2B. Modern financial markets generate thousands of headlines per minute. Sending all of them to cloud LLMs wastes money on noise. SignalFlow AI solves this with a two-tier architecture." | Problem statement & Hackathon intro |
+| **0:00 - 0:25** | Terminal showing `streamlit run app.py` and Dashboard Home Page | "Welcome to SignalFlow AI, a real-time financial news intelligence pipeline featuring Strands Decider 2B and Google Gemini. Modern financial markets generate thousands of headlines per minute. Sending all of them to cloud LLMs wastes money on noise. SignalFlow AI solves this with a two-tier architecture." | Problem statement & architecture intro |
 | **0:25 - 0:55** | Live Pipeline Tab in Streamlit; Ingest RSS headlines button clicked | "Here in our Live Pipeline tab, we ingest live market news from Yahoo Finance, CNBC, and MarketWatch. Watch what happens: Strands Decider 2B evaluates each headline on CPU in under 1 second. For example, 'Tesla Q3 net income surges 17%' is classified as Bullish with 96.1% calibrated confidence. Because confidence exceeds our 80% policy threshold, it's approved for cloud synthesis." | Strands Decider 2B decision & calibrated confidence score |
 | **0:55 - 1:25** | Live Pipeline Table showing Noise and Neutral badges | "Now look at the next headlines. An article about a celebrity chef is classified as 'Noise' with 44% confidence. Our policy gatekeeper drops it locally. Notice the cloud latency is 0.0 milliseconds and cloud cost is exactly zero dollars. Similarly, routine Federal Reserve consensus is classified as 'Neutral' and skipped. We just filtered over 60% of our news volume locally!" | Locally filtered headline (Noise/Neutral, 0 ms cloud latency, $0.00 cost) |
 | **1:25 - 1:55** | Human Review Queue Tab | "What about uncertain headlines? Here's an ambiguous takeover rumor classified as Bullish, but with only 52% confidence. Instead of hallucinating in the cloud, our policy intercepts it in the Human Review Queue. As an analyst, I can inspect the headline, review Decider's probability distribution, and click 'Confirm & Send to Gemini' or 'Reject'." | Low-confidence review case & human oversight |

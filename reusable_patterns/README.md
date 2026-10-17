@@ -1,5 +1,5 @@
 # Reusable Pattern: Calibrated Multi-Class Policy Gatekeeper
-**Hackathon Tags:** `#strands-decider-2b` `#policy`
+**Tags:** `#strands-decider-2b` `#policy`
 
 ## Overview
 This asset provides an independent, production-grade implementation of a **confidence-gated decision policy** powered by **Strands Decider 2B**. It acts as a lightweight System One filter that intercepts high-velocity inputs, evaluates their sentiment and calibrated confidence, and gates downstream actions.

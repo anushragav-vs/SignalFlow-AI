@@ -2,7 +2,7 @@
 ==============================================================================
 SignalFlow AI Reusable Pattern: Calibrated Financial News Policy Gatekeeper
 ==============================================================================
-Hackathon Tags: #strands-decider-2b #policy
+Tags: #strands-decider-2b #policy
 
 This reusable module demonstrates how developers can integrate Strands Decider 2B
 as a high-throughput, calibrated first-tier decision filter ("System One")

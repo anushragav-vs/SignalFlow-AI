@@ -60,8 +60,8 @@ class AppConfig:
 
     # Disclaimers & Tags
     disclaimer: str = FINANCIAL_DISCLAIMER
-    hackathon_tags: List[str] = field(
-        default_factory=lambda: ["#strands-decider-2b", "#policy"]
+    project_tags: List[str] = field(
+        default_factory=lambda: ["#strands-decider-2b", "#policy", "#google-gemini", "#fintech"]
     )
 
     def is_gemini_configured(self) -> bool:

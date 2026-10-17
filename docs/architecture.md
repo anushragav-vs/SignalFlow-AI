@@ -1,5 +1,5 @@
 # SignalFlow AI - Architectural Specification
-**Hackathon Tags:** `#strands-decider-2b` `#policy`
+**Core Tags:** `#strands-decider-2b` `#policy` `#google-gemini` `#fintech`
 
 ## 1. System Overview
 

@@ -366,7 +366,7 @@ def get_config() -> Dict[str, Any]:
         "sqlite_db_path": config.sqlite_db_path,
         "masked_api_key": config.get_masked_api_key(),
         "disclaimer": FINANCIAL_DISCLAIMER,
-        "hackathon_tags": config.hackathon_tags,
+        "tags": config.project_tags,
     }
 
 

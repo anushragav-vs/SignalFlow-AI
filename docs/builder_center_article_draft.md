@@ -1,7 +1,7 @@
 # Building SignalFlow AI: Two-Tier Financial Intelligence with Strands Decider 2B and Google Gemini
-**Author:** First-Year AIML Student & SignalFlow AI Contributor  
-**Hackathon:** AWS Agent Experience Hackathon featuring Strands Decider 2B  
-**Tags:** `#strands-decider-2b` `#policy`
+**Author:** SignalFlow AI Team  
+**Project:** Architecture & Technical Design Specification  
+**Tags:** `#strands-decider-2b` `#policy` `#google-gemini` `#fintech`
 
 ---
 

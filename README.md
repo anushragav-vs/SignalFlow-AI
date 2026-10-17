@@ -9,7 +9,7 @@
 [![Tests: 29 Passed](https://img.shields.io/badge/Tests-29%20Passed%20(Pytest)-brightgreen.svg)](tests/)
 
 **GitHub Repository:** [https://github.com/anushragav-vs/SignalFlow-AI](https://github.com/anushragav-vs/SignalFlow-AI)  
-**Hackathon Tags:** `#strands-decider-2b` `#policy` `#google-gemini` `#fintech`
+**Core Tags:** `#strands-decider-2b` `#policy` `#google-gemini` `#fintech`
 
 ---
 
@@ -360,7 +360,7 @@ signalflow-ai/
 │   ├── test_metrics.py         # Cost & latency formula validation tests
 │   ├── test_pipeline.py        # End-to-end pipeline tests
 │   └── test_rss.py             # RSS normalization & deduplication tests
-├── reusable_patterns/          # Independent hackathon pattern asset
+├── reusable_patterns/          # Independent policy pattern asset
 │   ├── financial_news_policy.py# Standalone reusable policy router
 │   └── README.md               # Pattern documentation & integration guide
 └── data/                       # Ground-truth datasets & fixtures

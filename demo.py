@@ -100,7 +100,7 @@ def run_pipeline_demo(model_id: str = config.gemini_model_id):
         f"[dim]System One (Local):[/] [yellow]Strands Decider 2B (Calibrated Multi-Class)[/yellow]\n"
         f"[dim]System Two (Cloud):[/] [green]Google Gemini API ({model_id})[/green]\n"
         f"[dim]Persistence:[/] [magenta]SQLite ({config.sqlite_db_path})[/magenta]\n"
-        f"[dim]Hackathon Tags:[/] [cyan]{config.hackathon_tags[0]}[/] [cyan]{config.hackathon_tags[1]}[/]",
+        f"[dim]Core Tags:[/] [cyan]{config.project_tags[0]}[/] [cyan]{config.project_tags[1]}[/]",
         border_style="cyan",
         box=box.ASCII,
     ))

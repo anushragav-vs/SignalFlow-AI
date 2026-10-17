@@ -1,6 +1,6 @@
 """
 SignalFlow AI - Latency, Cost & Performance Metrics Calculation
-Implements mandatory hackathon formulas and statistical distributions without fabricated figures.
+Implements benchmark performance formulas and statistical distributions without fabricated figures.
 """
 
 from typing import List, Dict, Any, Optional

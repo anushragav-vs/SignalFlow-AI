@@ -144,5 +144,5 @@ export interface AppConfig {
   sqlite_db_path: string;
   masked_api_key: string;
   disclaimer: string;
-  hackathon_tags: string[];
+  tags?: string[];
 }

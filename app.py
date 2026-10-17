@@ -2,7 +2,7 @@
 SignalFlow AI - Real-Time Algorithmic Financial News Filter
 Ultra-Modern Fintech UI/UX Dashboard powered by Streamlit and Plotly.
 Featuring Strands Decider 2B System 1 Gatekeeper + Google Gemini 3.5 System 2 Analysis.
-Hackathon Tags: #strands-decider-2b #policy
+Tags: #strands-decider-2b #policy
 """
 
 import os
