@@ -713,25 +713,28 @@ with nav_feed:
     filter_col1, filter_col2 = st.columns([1, 6])
     with filter_col1:
         st.markdown("<div style='padding-top:6px; font-size:0.8rem; font-weight:700; color:#64748b;'>FILTER:</div>", unsafe_allow_html=True)
-    with filter_col2:
+        fin_count = pos_count + neu_count + neg_count + rev_count
         selected_category_filter = st.radio(
             "Category Filter",
             [
-                f"All ({total_arts})",
+                f"All Financial ({fin_count})",
                 f"Positive ({pos_count})",
                 f"Neutral ({neu_count})",
                 f"Negative ({neg_count})",
-                f"Noise ({noi_count})",
                 f"Review Queue ({rev_count})",
+                f"Non-Financial Noise ({noi_count})",
+                f"All Signals ({total_arts})",
             ],
             horizontal=True,
             label_visibility="collapsed",
             key="cat_filter_radio",
         )
 
-    # Apply radio filter
+    # Apply radio filter (defaults to All Financial, filtering out Noise)
     display_signals = filtered_by_search
-    if "Positive" in selected_category_filter:
+    if "All Financial" in selected_category_filter:
+        display_signals = [s for s in display_signals if s["decider_sentiment"] != "Noise"]
+    elif "Positive" in selected_category_filter:
         display_signals = [s for s in display_signals if s["decider_sentiment"] == "Bullish"]
     elif "Negative" in selected_category_filter:
         display_signals = [s for s in display_signals if s["decider_sentiment"] == "Bearish"]

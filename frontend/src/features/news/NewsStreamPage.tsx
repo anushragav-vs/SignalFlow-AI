@@ -41,7 +41,8 @@ export const NewsStreamPage: React.FC<NewsStreamPageProps> = ({
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFeed, setSelectedFeed] = useState<string>('All Feeds');
-  const [categoryFilter, setCategoryFilter] = useState<string>('All');
+  const [filterNonFinancial, setFilterNonFinancial] = useState<boolean>(true);
+  const [categoryFilter, setCategoryFilter] = useState<string>('All Financial');
   const [isFetching, setIsFetching] = useState(false);
   const [isEvaluatingManual, setIsEvaluatingManual] = useState(false);
   const [manualHeadline, setManualHeadline] = useState('');
@@ -79,6 +80,7 @@ export const NewsStreamPage: React.FC<NewsStreamPageProps> = ({
   const neuCount = searchFiltered.filter((s) => s.decider_sentiment === 'Neutral').length;
   const noiCount = searchFiltered.filter((s) => s.decider_sentiment === 'Noise').length;
   const revCount = searchFiltered.filter((s) => s.policy_action === 'REVIEW_QUEUE').length;
+  const financialCount = posCount + negCount + neuCount + revCount;
 
   let overallBias: 'Bullish' | 'Bearish' | 'Neutral' = 'Neutral';
   if (posCount > negCount && posCount >= neuCount) overallBias = 'Bullish';
@@ -89,13 +91,19 @@ export const NewsStreamPage: React.FC<NewsStreamPageProps> = ({
   const neuPct = Math.round((neuCount / denom) * 100);
   const negPct = Math.round((negCount / denom) * 100);
 
-  // Apply category pill filter
+  // Apply category pill filter with non-financial noise avoidance
   const displaySignals = searchFiltered.filter((s) => {
-    if (categoryFilter === 'All') return true;
+    // When non-financial filter is active, automatically drop Noise from financial views
+    if (filterNonFinancial && categoryFilter !== 'Non-Financial Noise' && categoryFilter !== 'Noise' && s.decider_sentiment === 'Noise') {
+      return false;
+    }
+
+    if (categoryFilter === 'All Financial') return s.decider_sentiment !== 'Noise';
+    if (categoryFilter === 'All') return !filterNonFinancial || s.decider_sentiment !== 'Noise';
     if (categoryFilter === 'Positive') return s.decider_sentiment === 'Bullish';
     if (categoryFilter === 'Negative') return s.decider_sentiment === 'Bearish';
     if (categoryFilter === 'Neutral') return s.decider_sentiment === 'Neutral';
-    if (categoryFilter === 'Noise') return s.decider_sentiment === 'Noise';
+    if (categoryFilter === 'Non-Financial Noise' || categoryFilter === 'Noise') return s.decider_sentiment === 'Noise';
     if (categoryFilter === 'Review Queue') return s.policy_action === 'REVIEW_QUEUE';
     return true;
   });
@@ -505,39 +513,76 @@ export const NewsStreamPage: React.FC<NewsStreamPageProps> = ({
         </div>
       </div>
 
-      {/* 3. Interactive Filter Pills (SentimentIQ Style) */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
-        <span className="text-xs font-bold text-slate-500 uppercase tracking-wider mr-1 shrink-0">Filter:</span>
-        {[
-          { label: 'All', count: totalCount },
-          { label: 'Positive', count: posCount },
-          { label: 'Neutral', count: neuCount },
-          { label: 'Negative', count: negCount },
-          { label: 'Noise', count: noiCount },
-          { label: 'Review Queue', count: revCount },
-        ].map((f) => {
-          const isActive = categoryFilter === f.label;
-          return (
-            <button
-              key={f.label}
-              onClick={() => setCategoryFilter(f.label)}
-              className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-150 flex items-center gap-1.5 ${
-                isActive
-                  ? 'bg-blue-600/20 text-blue-400 border border-blue-500/50 shadow-sm shadow-blue-500/20'
-                  : 'bg-[#0b1324] text-slate-400 border border-[#1a2944] hover:text-white hover:border-slate-500'
-              }`}
-            >
-              <span>{f.label}</span>
-              <span
-                className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${
-                  isActive ? 'bg-blue-500/30 text-white' : 'bg-slate-800 text-slate-400'
-                }`}
-              >
-                {f.count}
+      {/* 3. Interactive Filter Pills with Non-Financial Filter Switch */}
+      <div className="space-y-2">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
+            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider mr-1 shrink-0">Filter:</span>
+            {[
+              { label: 'All Financial', count: financialCount },
+              { label: 'Positive', count: posCount },
+              { label: 'Neutral', count: neuCount },
+              { label: 'Negative', count: negCount },
+              { label: 'Review Queue', count: revCount },
+              { label: 'Non-Financial Noise', count: noiCount },
+            ].map((f) => {
+              const isActive = categoryFilter === f.label;
+              return (
+                <button
+                  key={f.label}
+                  onClick={() => setCategoryFilter(f.label)}
+                  className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-150 flex items-center gap-1.5 ${
+                    isActive
+                      ? 'bg-blue-600/20 text-blue-400 border border-blue-500/50 shadow-sm shadow-blue-500/20'
+                      : 'bg-[#0b1324] text-slate-400 border border-[#1a2944] hover:text-white hover:border-slate-500'
+                  }`}
+                >
+                  <span>{f.label}</span>
+                  <span
+                    className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${
+                      isActive ? 'bg-blue-500/30 text-white' : 'bg-slate-800 text-slate-400'
+                    }`}
+                  >
+                    {f.count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Non-Financial Noise Filter Toggle */}
+          <button
+            type="button"
+            onClick={() => setFilterNonFinancial(!filterNonFinancial)}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${
+              filterNonFinancial
+                ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/40 shadow-sm shadow-emerald-500/10'
+                : 'bg-[#0b1324] text-slate-400 border-[#1a2944] hover:text-slate-200'
+            }`}
+            title="Automatically avoids and filters out non-financial lifestyle and celebrity noise"
+          >
+            <ShieldCheck className="w-3.5 h-3.5" />
+            <span>Filter Non-Financial: {filterNonFinancial ? 'ON' : 'OFF'}</span>
+          </button>
+        </div>
+
+        {/* Filter Notice Banner if Non-Financial items are hidden */}
+        {filterNonFinancial && noiCount > 0 && categoryFilter !== 'Non-Financial Noise' && (
+          <div className="flex items-center justify-between text-[11px] text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-xl">
+            <span className="flex items-center gap-1.5">
+              <ShieldCheck className="w-3.5 h-3.5 shrink-0" />
+              <span>
+                <strong>Market Filter Active:</strong> {noiCount} non-financial noise items blocked locally by Strands Decider 2B ($0.00 cloud spend).
               </span>
+            </span>
+            <button
+              onClick={() => setCategoryFilter('Non-Financial Noise')}
+              className="underline hover:text-white ml-2 text-[10px] font-mono shrink-0"
+            >
+              View Blocked Noise
             </button>
-          );
-        })}
+          </div>
+        )}
       </div>
 
       {/* 4. Main Two-Column Layout (News Feed vs Sentiment Overview & Donut) */}

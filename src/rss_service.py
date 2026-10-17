@@ -74,6 +74,31 @@ class RSSIngestionService:
         content = f"{norm_h}|{can_url}"
         return hashlib.sha256(content.encode("utf-8")).hexdigest()
 
+    @staticmethod
+    def is_financial_headline(headline: str, description: str = "") -> bool:
+        """
+        Determines whether an article is materially related to financial markets,
+        economics, public companies, equities, or monetary policy.
+        Filters out non-financial lifestyle, celebrity gossip, sports, recipes,
+        and entertainment trivia.
+        """
+        text = f"{headline} {description}".lower()
+
+        # Non-financial disqualifiers (drop immediately)
+        disqualifiers = [
+            r"\b(recipe|cocktail|diet|smoothie|skincare|dating|wardrobe|spotted in|met gala)\b",
+            r"\b(box office|trailer|oscar|grammy|emmy|hollywood star|super bowl halftime)\b",
+            r"\b(horoscope|astrology|zodiac|beauty routine|royal family|prince harry|meghan)\b",
+            r"\b(nfl score|nba highlights|premier league|touchdown|grand slam|tennis match)\b",
+            r"\b(celebrity chef|luxury watch gala|vacation destination|travel tips)\b",
+            r"\b(best restaurants|fashion week|movie review|album review|actor buys)\b",
+        ]
+        for pattern in disqualifiers:
+            if re.search(pattern, text):
+                return False
+
+        return True
+
     def fetch_feed(self, feed_name: str, max_items: int = 10) -> List[NormalizedArticle]:
         """
         Fetches and normalizes articles from a single named feed with fast timeout-guarded HTTP requests.
@@ -117,13 +142,21 @@ class RSSIngestionService:
                 return []
 
             articles = []
-            for entry in getattr(feed, "entries", [])[:max_items]:
+            for entry in getattr(feed, "entries", []):
+                if len(articles) >= max_items:
+                    break
+
                 raw_title = getattr(entry, "title", "").strip()
                 if not raw_title:
                     continue
 
-                raw_link = getattr(entry, "link", "").strip()
                 raw_desc = getattr(entry, "summary", getattr(entry, "description", "")).strip()
+
+                # Filter out obvious non-financial noise
+                if not self.is_financial_headline(raw_title, raw_desc):
+                    continue
+
+                raw_link = getattr(entry, "link", "").strip()
                 pub_date = getattr(entry, "published", getattr(entry, "updated", datetime.now(timezone.utc).isoformat()))
 
                 norm_h = self.normalize_headline(raw_title)
