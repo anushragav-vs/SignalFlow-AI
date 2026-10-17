@@ -92,6 +92,7 @@ class RSSIngestionService:
             r"\b(nfl score|nba highlights|premier league|touchdown|grand slam|tennis match)\b",
             r"\b(celebrity chef|luxury watch gala|vacation destination|travel tips)\b",
             r"\b(best restaurants|fashion week|movie review|album review|actor buys)\b",
+            r"\b(rigging|votes either through|political storm|election rally|pellet guns|jantar mantar|crime scene|murder suspect)\b",
         ]
         for pattern in disqualifiers:
             if re.search(pattern, text):

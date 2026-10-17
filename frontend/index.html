@@ -7,7 +7,21 @@
     <meta name="description" content="Strands Decider 2B System 1 Policy Gatekeeper paired with Google Gemini 3.5 System 2 Intelligence." />
     <meta name="application-name" content="SignalFlow AI" />
     <meta name="theme-color" content="#060b15" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=sf2" />
+    <link rel="alternate icon" type="image/x-icon" href="/favicon.ico?v=sf2" />
+    <link rel="shortcut icon" href="/favicon.ico?v=sf2" />
+    <script>
+      (function() {
+        document.title = "SignalFlow AI — Real-Time Algorithmic Financial News Filter";
+        if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
+          navigator.serviceWorker.getRegistrations().then(function(regs) {
+            for (var i = 0; i < regs.length; i++) {
+              regs[i].unregister();
+            }
+          });
+        }
+      })();
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">

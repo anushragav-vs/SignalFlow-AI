@@ -166,10 +166,15 @@ def get_signals(
     sentiment: Optional[str] = Query(default=None),
     policy_action: Optional[str] = Query(default=None),
     review_status: Optional[str] = Query(default=None),
+    filter_non_financial: bool = Query(default=True),
 ) -> List[Dict[str, Any]]:
-    """Returns recent financial signals with optional filtering."""
+    """Returns recent financial signals with automatic non-financial noise avoidance."""
     raw_signals = db.get_recent_signals(limit=limit)
     formatted = [format_signal_record(s) for s in raw_signals]
+
+    if filter_non_financial and (not sentiment or sentiment.lower() != "noise"):
+        # Strictly exclude non-financial noise
+        formatted = [s for s in formatted if s.get("decider_sentiment", "").lower() != "noise"]
 
     if search:
         q = search.lower().strip()
