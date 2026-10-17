@@ -1,0 +1,26 @@
+# SignalFlow AI - Production & Development Dependencies
+# Python 3.10+ (Tested on Python 3.14.7 / Windows 11)
+
+# Primary Local Decision Engine (System One)
+strands-decider>=0.1.0
+torch>=2.7.0
+transformers>=5.15.0,<6.0.0
+peft>=0.21.2
+accelerate>=0.34.0
+huggingface_hub>=1.5.0
+
+# Google AI Studio Gemini API Integration (System Two)
+google-genai>=2.31.0
+pydantic>=2.10.0
+
+# Real-Time Ingestion, Persistence, Metrics & User Interface
+feedparser>=6.0.14
+streamlit>=1.30.0
+plotly>=5.18.0
+pandas>=2.0.0
+python-dotenv>=1.0.0
+rich>=13.0.0
+requests>=2.28.0
+
+# Testing & Verification
+pytest>=8.0.0

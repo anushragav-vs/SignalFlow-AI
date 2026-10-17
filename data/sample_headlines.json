@@ -1,0 +1,66 @@
+[
+  {
+    "id": "NEWS-001",
+    "headline": "Tesla reports Q3 net income surges 17% beating Wall Street estimates as automotive margins expand to 19.8%.",
+    "expected_category": "Bullish",
+    "expected_action": "APPROVE",
+    "source": "Bloomberg Markets",
+    "description": "Strong quarterly earnings beat with margin expansion across automotive operations."
+  },
+  {
+    "id": "NEWS-002",
+    "headline": "SEC files securities fraud charges against regional bank following whistleblower disclosure of concealed bad loans; stock drops 42%.",
+    "expected_category": "Bearish",
+    "expected_action": "APPROVE",
+    "source": "Reuters Financial",
+    "description": "Regulatory enforcement action and massive equity plunge following concealed credit impairment."
+  },
+  {
+    "id": "NEWS-003",
+    "headline": "Federal Reserve leaves benchmark interest rate unchanged at 5.25%-5.50% range, consistent with market expectations.",
+    "expected_category": "Neutral",
+    "expected_action": "BLOCK_NEUTRAL",
+    "source": "Wall Street Journal",
+    "description": "Monetary policy decision fully priced in by market consensus with no unexpected rate change."
+  },
+  {
+    "id": "NEWS-004",
+    "headline": "Celebrity chef spotted attending luxury watch gala in the Hamptons during holiday weekend.",
+    "expected_category": "Noise",
+    "expected_action": "BLOCK_NOISE",
+    "source": "Page Six Entertainment",
+    "description": "Irrelevant lifestyle and celebrity gossip with zero macro or corporate financial relevance."
+  },
+  {
+    "id": "NEWS-005",
+    "headline": "European petrochemical manufacturer warns of severe full-year operating loss due to unexpected cracker outages and soaring feed costs.",
+    "expected_category": "Bearish",
+    "expected_action": "APPROVE",
+    "source": "Financial Times",
+    "description": "Profit warning, supply disruption, and rising energy input costs impairing EBITDA."
+  },
+  {
+    "id": "NEWS-006",
+    "headline": "NVIDIA secures multi-billion enterprise AI datacenter supply contracts across APAC region with deliveries commencing in Q4.",
+    "expected_category": "Bullish",
+    "expected_action": "APPROVE",
+    "source": "CNBC Tech",
+    "description": "Large-scale commercial revenue contracts and backlog expansion for sovereign AI infrastructure."
+  },
+  {
+    "id": "NEWS-007",
+    "headline": "Rumors circulate regarding potential mid-market software vendor acquisition by private equity sponsor.",
+    "expected_category": "Bullish",
+    "expected_action": "REVIEW_QUEUE",
+    "source": "DealReporter",
+    "description": "Unverified M&A speculation with ambiguous valuation details requiring human verification."
+  },
+  {
+    "id": "NEWS-008",
+    "headline": "Actor buys historic vintage Ferrari at weekend auction for record collector sum.",
+    "expected_category": "Noise",
+    "expected_action": "BLOCK_NOISE",
+    "source": "Auto Enthusiast Weekly",
+    "description": "Collector car lifestyle news with no capital market or sector relevance."
+  }
+]

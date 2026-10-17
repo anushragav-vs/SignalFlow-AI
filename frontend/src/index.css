@@ -1,0 +1,43 @@
+@import "tailwindcss";
+@config "../tailwind.config.js";
+
+body {
+  background-color: #060b15;
+  color: #f1f5f9;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Custom Sleek Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #060b15;
+}
+::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #334155;
+}
+
+/* Glassmorphism & Neon helpers */
+.glass-panel {
+  background: rgba(10, 17, 32, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.glow-teal-text {
+  text-shadow: 0 0 12px rgba(20, 184, 166, 0.4);
+}
+
+.glow-green-text {
+  text-shadow: 0 0 12px rgba(16, 185, 129, 0.4);
+}
+
+.glow-red-text {
+  text-shadow: 0 0 12px rgba(239, 68, 68, 0.4);
+}

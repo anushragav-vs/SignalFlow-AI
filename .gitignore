@@ -1,0 +1,47 @@
+# Virtual Environment
+.venv/
+venv/
+ENV/
+env/
+
+# Dependencies
+node_modules/
+frontend/node_modules/
+frontend/dist/
+dist/
+dist-ssr/
+
+# Python Cache & Testing
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Environment & Secret files (NEVER commit secrets)
+.env
+.env.local
+.env.*
+*.pem
+*.key
+
+# Local Databases & Runtime Storage
+*.db
+*.sqlite
+*.sqlite3
+signalflow.db
+test_signalflow_temp.db
+
+# Test Outputs & Local Benchmark Caches
+gemini_test_result.json
+bedrock_test_result.json
+checkpoints/
+
+# OS and IDE files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
