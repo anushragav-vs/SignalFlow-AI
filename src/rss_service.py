@@ -12,6 +12,11 @@ from dataclasses import dataclass, asdict
 import feedparser
 
 from config import config
+from src.deduplication import (
+    normalize_headline as dedup_normalize_headline,
+    canonicalize_url as dedup_canonicalize_url,
+    compute_article_fingerprint,
+)
 
 
 @dataclass
@@ -23,6 +28,7 @@ class NormalizedArticle:
     description: str
     published_at: str
     dedup_hash: str
+    provider_article_id: Optional[str] = None
     is_live: bool = True
 
     def to_dict(self) -> Dict[str, Any]:
@@ -31,13 +37,14 @@ class NormalizedArticle:
 
 class RSSIngestionService:
     """
-    Manages live financial news feeds with canonical URL and headline deduplication.
+    Manages live financial news feeds with 3-tier canonical URL and headline deduplication.
     """
 
-    def __init__(self, feeds: Optional[Dict[str, str]] = None):
+    def __init__(self, feeds: Optional[Dict[str, str]] = None, db: Optional[Any] = None):
         self.feeds: Dict[str, str] = feeds.copy() if feeds else config.rss_feeds.copy()
         if "Yahoo Finance Top Stories" not in self.feeds and "Yahoo Finance Markets" in self.feeds:
             self.feeds["Yahoo Finance Top Stories"] = self.feeds["Yahoo Finance Markets"]
+        self.db = db
         self._seen_hashes: Set[str] = set()
 
     def add_feed(self, name: str, url: str):
@@ -55,24 +62,30 @@ class RSSIngestionService:
         """
         Strips whitespace, symbols, and casing to create comparable string for deduplication.
         """
-        clean = re.sub(r"[^\w\s]", "", text.lower())
-        return " ".join(clean.split())
+        return dedup_normalize_headline(text)
 
     @staticmethod
     def canonicalize_url(url: str) -> str:
         """
         Strips tracking parameters (utm_*, ref, etc.) from feed URLs.
         """
-        if not url:
-            return ""
-        clean = url.split("?")[0].split("#")[0].strip().rstrip("/")
-        return clean.lower()
+        return dedup_canonicalize_url(url)
 
-    def compute_hash(self, headline: str, url: str) -> str:
-        norm_h = self.normalize_headline(headline)
-        can_url = self.canonicalize_url(url)
-        content = f"{norm_h}|{can_url}"
-        return hashlib.sha256(content.encode("utf-8")).hexdigest()
+    def compute_hash(
+        self,
+        headline: str,
+        url: str,
+        provider_id: Optional[str] = None,
+        publisher: str = "",
+        published_at: Optional[str] = None,
+    ) -> str:
+        return compute_article_fingerprint(
+            provider_article_id=provider_id,
+            canonical_url=url,
+            headline=headline,
+            publisher=publisher,
+            published_at=published_at,
+        )
 
     @staticmethod
     def is_financial_headline(headline: str, description: str = "") -> bool:
@@ -158,15 +171,36 @@ class RSSIngestionService:
                     continue
 
                 raw_link = getattr(entry, "link", "").strip()
+                raw_guid = getattr(entry, "id", getattr(entry, "guid", "")).strip()
                 pub_date = getattr(entry, "published", getattr(entry, "updated", datetime.now(timezone.utc).isoformat()))
 
                 norm_h = self.normalize_headline(raw_title)
                 can_u = self.canonicalize_url(raw_link)
-                item_hash = self.compute_hash(raw_title, raw_link)
+                item_hash = self.compute_hash(
+                    headline=raw_title,
+                    url=can_u or raw_link,
+                    provider_id=raw_guid,
+                    publisher=feed_name,
+                    published_at=str(pub_date),
+                )
 
-                # Skip duplicates seen in this session
+                # Skip duplicates seen in this session or already persisted in database
                 if item_hash in self._seen_hashes:
                     continue
+                if self.db is not None:
+                    try:
+                        existing = self.db.find_existing_signal_id(
+                            fingerprint=item_hash,
+                            canonical_url=can_u or raw_link,
+                            headline=raw_title,
+                            publisher=feed_name,
+                        )
+                        if existing is not None:
+                            self._seen_hashes.add(item_hash)
+                            continue
+                    except Exception:
+                        pass
+
                 self._seen_hashes.add(item_hash)
 
                 articles.append(NormalizedArticle(
@@ -177,6 +211,7 @@ class RSSIngestionService:
                     description=raw_desc[:300] if raw_desc else "",
                     published_at=str(pub_date),
                     dedup_hash=item_hash,
+                    provider_article_id=raw_guid or None,
                     is_live=True,
                 ))
 
@@ -200,7 +235,7 @@ class RSSIngestionService:
 
     def normalize_manual_input(self, headline: str, publisher: str = "Manual Input") -> NormalizedArticle:
         norm_h = self.normalize_headline(headline)
-        item_hash = self.compute_hash(headline, "manual-input")
+        item_hash = self.compute_hash(headline=headline, url="manual://direct-input", publisher=publisher)
         return NormalizedArticle(
             headline=headline.strip(),
             normalized_headline=norm_h,
@@ -209,5 +244,6 @@ class RSSIngestionService:
             description="Submitted via manual input field.",
             published_at=datetime.now(timezone.utc).isoformat(),
             dedup_hash=item_hash,
+            provider_article_id=None,
             is_live=False,
         )

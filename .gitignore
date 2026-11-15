@@ -28,7 +28,9 @@ __pycache__/
 *.db
 *.sqlite
 *.sqlite3
+*.bak
 signalflow.db
+signalflow.db.bak
 test_signalflow_temp.db
 
 # Test Outputs & Local Benchmark Caches

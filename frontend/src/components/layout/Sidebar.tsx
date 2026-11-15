@@ -7,16 +7,18 @@ import {
   BarChart3,
   Settings,
   Scale,
+  Radar,
   ChevronLeft,
   ChevronRight,
 } from 'lucide-react';
 
-export type NavTab = 'news' | 'overview' | 'analysis' | 'review' | 'performance' | 'settings';
+export type NavTab = 'news' | 'intelligence' | 'overview' | 'analysis' | 'review' | 'performance' | 'settings';
 
 interface SidebarProps {
   activeTab: NavTab;
   onSelectTab: (tab: NavTab) => void;
   pendingReviewCount: number;
+  unreadAlertCount?: number;
   collapsed: boolean;
   onToggleCollapse: () => void;
 }
@@ -25,11 +27,19 @@ export const Sidebar: React.FC<SidebarProps> = ({
   activeTab,
   onSelectTab,
   pendingReviewCount,
+  unreadAlertCount = 0,
   collapsed,
   onToggleCollapse,
 }) => {
   const navItems = [
     { id: 'news' as NavTab, label: 'News Stream', icon: Newspaper, badge: null },
+    {
+      id: 'intelligence' as NavTab,
+      label: 'Market Intelligence',
+      icon: Radar,
+      badge: unreadAlertCount > 0 ? unreadAlertCount : null,
+      badgeColor: 'bg-rose-500/20 text-rose-400 border border-rose-500/30',
+    },
     { id: 'overview' as NavTab, label: 'Overview', icon: LayoutDashboard, badge: null },
     { id: 'analysis' as NavTab, label: 'Gemini Intel', icon: BrainCircuit, badge: null },
     {

@@ -25,6 +25,8 @@ import {
   Lightbulb,
 } from 'lucide-react';
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
+import { NewsDetailModal } from '../intelligence/NewsDetailModal';
+import { ArrowRight } from 'lucide-react';
 
 interface NewsStreamPageProps {
   signals: Signal[];
@@ -49,6 +51,7 @@ export const NewsStreamPage: React.FC<NewsStreamPageProps> = ({
   const [showManualInput, setShowManualInput] = useState(false);
   const [lastEvaluatedSignal, setLastEvaluatedSignal] = useState<Signal | null>(null);
   const [expandedSignalId, setExpandedSignalId] = useState<number | null>(null);
+  const [selectedSignalForDetail, setSelectedSignalForDetail] = useState<Signal | null>(null);
 
   // Extract smart financial hashtags
   const getArticleTags = (headline: string, sentiment: MarketSentiment): string[] => {
@@ -658,7 +661,11 @@ export const NewsStreamPage: React.FC<NewsStreamPageProps> = ({
                   </div>
 
                   {/* Headline */}
-                  <h3 className="text-base font-bold text-white leading-snug hover:text-cyan-300 transition-colors cursor-pointer mb-3">
+                  <h3
+                    onClick={() => setSelectedSignalForDetail(signal)}
+                    className="text-base font-bold text-white leading-snug hover:text-cyan-300 transition-colors cursor-pointer mb-3"
+                    title="Click to view full intelligence dossier"
+                  >
                     {signal.headline}
                   </h3>
 
@@ -899,16 +906,28 @@ export const NewsStreamPage: React.FC<NewsStreamPageProps> = ({
                     </div>
                   )}
 
-                  {/* Hashtag Group Pills */}
-                  <div className="flex flex-wrap items-center gap-1.5">
-                    {tags.map((tag, i) => (
-                      <span
-                        key={i}
-                        className="text-[11px] font-mono bg-[#0d162a] text-blue-400 border border-[#1b2b4b] px-2.5 py-0.5 rounded-md"
-                      >
-                        {tag}
-                      </span>
-                    ))}
+                  {/* Bottom Action & Hashtag Bar */}
+                  <div className="flex flex-wrap items-center justify-between gap-2 pt-3 mt-3 border-t border-[#142138]">
+                    {/* Hashtag Group Pills */}
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      {tags.map((tag, i) => (
+                        <span
+                          key={i}
+                          className="text-[11px] font-mono bg-[#0d162a] text-blue-400 border border-[#1b2b4b] px-2.5 py-0.5 rounded-md"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => setSelectedSignalForDetail(signal)}
+                      className="flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-mono font-semibold text-cyan-400 bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 transition-all hover:scale-[1.02] active:scale-[0.98] ml-auto"
+                    >
+                      <span>View Dossier</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </button>
                   </div>
                 </div>
               );
@@ -1038,6 +1057,18 @@ export const NewsStreamPage: React.FC<NewsStreamPageProps> = ({
           </div>
         </div>
       </div>
+
+      {/* Complete News Detail Modal (Task 1) */}
+      {selectedSignalForDetail && (
+        <NewsDetailModal
+          signal={selectedSignalForDetail}
+          onClose={() => setSelectedSignalForDetail(null)}
+          onReanalyze={async () => {
+            await onRefreshSignals();
+          }}
+          onFilterToTicker={onSelectStock}
+        />
+      )}
     </div>
   );
 };

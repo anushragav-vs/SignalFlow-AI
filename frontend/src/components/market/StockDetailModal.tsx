@@ -43,6 +43,21 @@ export const StockDetailModal: React.FC<StockDetailModalProps> = ({
 
   useEffect(() => {
     if (!symbol) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    const origOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = origOverflow;
+    };
+  }, [symbol, onClose]);
+
+  useEffect(() => {
+    if (!symbol) return;
     let isMounted = true;
     setLoading(true);
     setError(null);
@@ -148,7 +163,7 @@ export const StockDetailModal: React.FC<StockDetailModalProps> = ({
             <div>
               <div className="flex items-center gap-2">
                 <span className="font-extrabold text-xl md:text-2xl text-white font-mono tracking-tight">
-                  {data?.display_symbol || symbol.replace('^', '')}
+                  {data?.label || data?.display_symbol || symbol.replace('^', '')}
                 </span>
                 <span className="px-2 py-0.5 rounded text-[10px] font-bold font-mono uppercase tracking-wider bg-[#101b33] text-cyan-400 border border-[#1e3258]">
                   {data?.category || 'MARKET ASSET'}

@@ -1,4 +1,18 @@
-import type { KPIs, Signal, AppHealth, BenchmarkSummary, AppConfig, MarketTicker, StockDetail } from '../types';
+import type {
+  KPIs,
+  Signal,
+  AppHealth,
+  BenchmarkSummary,
+  AppConfig,
+  MarketTicker,
+  StockDetail,
+  SupportedInstrument,
+  InstrumentSummary,
+  ForexInstrumentDetail,
+  MarketAlert,
+  AlertRule,
+  IntelligenceStats,
+} from '../types';
 
 const API_BASE = '/api';
 
@@ -113,4 +127,63 @@ export const api = {
 
   getMarketQuote: (symbol: string) =>
     fetchJson<StockDetail>(`${API_BASE}/market/quote/${encodeURIComponent(symbol)}`),
+
+  // Market Intelligence Endpoints
+  getIntelligenceTickers: () =>
+    fetchJson<{
+      supported_universe: SupportedInstrument[];
+      instruments_summary: InstrumentSummary[];
+      total_supported: number;
+    }>(`${API_BASE}/intelligence/tickers`),
+
+  getIntelligenceImpact: (params?: { limit?: number; min_level?: string }) => {
+    const q = new URLSearchParams();
+    if (params?.limit) q.set('limit', String(params.limit));
+    if (params?.min_level) q.set('min_level', params.min_level);
+    return fetchJson<{
+      distribution: Record<string, number>;
+      dimension_averages: Record<string, number>;
+      total_analyzed: number;
+      signals: Signal[];
+    }>(`${API_BASE}/intelligence/impact?${q.toString()}`);
+  },
+
+  getIntelligenceNewsDetail: (articleId: number) =>
+    fetchJson<Signal>(`${API_BASE}/intelligence/news/${articleId}`),
+
+  getIntelligenceInstrumentDetail: (symbol: string) =>
+    fetchJson<ForexInstrumentDetail>(`${API_BASE}/intelligence/instruments/${encodeURIComponent(symbol)}`),
+
+  getIntelligenceAlerts: (unreadOnly: boolean = false) =>
+    fetchJson<{
+      rules: AlertRule[];
+      alerts: MarketAlert[];
+      unread_count: number;
+    }>(`${API_BASE}/intelligence/alerts?unread_only=${unreadOnly}`),
+
+  createAlertRule: (rule: {
+    name: string;
+    condition_type: string;
+    target_value?: string | null;
+    min_confidence?: number;
+    enabled?: boolean;
+  }) =>
+    fetchJson<{ status: string; rule_id: number; rules: AlertRule[] }>(`${API_BASE}/intelligence/alerts/rules`, {
+      method: 'POST',
+      body: JSON.stringify(rule),
+    }),
+
+  markAlertRead: (alertId: number) =>
+    fetchJson<{ status: string; alert_id: number }>(`${API_BASE}/intelligence/alerts/${alertId}/read`, {
+      method: 'POST',
+    }),
+
+  reanalyzeArticleIntelligence: (articleId: number, useGemini: boolean = false) =>
+    fetchJson<Signal>(`${API_BASE}/intelligence/analyze/${articleId}`, {
+      method: 'POST',
+      body: JSON.stringify({ use_gemini: useGemini }),
+    }),
+
+  getIntelligenceStatistics: () =>
+    fetchJson<IntelligenceStats>(`${API_BASE}/intelligence/statistics`),
 };

@@ -4,9 +4,9 @@
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![System One: Strands Decider 2B](https://img.shields.io/badge/System%20One-Strands%20Decider%202B-emerald.svg)](https://huggingface.co/StrandsAgents/strands-decider-2B-qwen3.5-v1-2610)
 [![System Two: Google Gemini 3.5](https://img.shields.io/badge/System%20Two-Google%20AI%20Studio%20Gemini%203.5-teal.svg)](https://aistudio.google.com/)
-[![SDK: google-genai](https://img.shields.io/badge/SDK-google--genai%20v2.31+-purple.svg)](https://pypi.org/project/google-genai/)
+[![Market Intelligence: Smart Tickers & Impact](https://img.shields.io/badge/Market%20Intelligence-Forex%20NLP%20%7C%20Impact%20Predictor-blue.svg)](src/ticker_detection/)
 [![Frontend: React + Vite + Tailwind](https://img.shields.io/badge/Frontend-React%20%7C%20Vite%20%7C%20Tailwind-cyan.svg)](https://vitejs.dev/)
-[![Tests: 29 Passed](https://img.shields.io/badge/Tests-29%20Passed%20(Pytest)-brightgreen.svg)](tests/)
+[![Tests: 79 Passed](https://img.shields.io/badge/Tests-79%20Passed%20(67%20Pytest%20%2B%2012%20Vitest)-brightgreen.svg)](tests/)
 
 **GitHub Repository:** [https://github.com/anushragav-vs/SignalFlow-AI](https://github.com/anushragav-vs/SignalFlow-AI)  
 **Core Tags:** `#strands-decider-2b` `#policy` `#google-gemini` `#fintech`
@@ -129,6 +129,39 @@ High-conviction headlines approved by the policy gatekeeper are synthesized into
 - Real-time sentiment distribution donut chart with center bullish percentage.
 - Segmented multi-color progress bars tracking positive, neutral, and negative market bias.
 - Search filter across headlines, publishers, and tickers with instantaneous category filtering.
+
+### 🌐 6. Smart Ticker Detection Engine (Forex NLP & Multi-Asset Registry)
+- **Supported Universe**: Initially supports 12 institutional currency pairs and commodities: `EUR/USD`, `GBP/USD`, `USD/JPY`, `AUD/USD`, `USD/CAD`, `USD/CHF`, `NZD/USD`, `EUR/GBP`, `EUR/JPY`, `GBP/JPY`, `AUD/JPY`, and `XAU/USD` (Gold).
+- **Externalized Entity Dictionary**: Centralized in `src/ticker_detection/entity_dictionary.json`, containing aliases, central banks (Federal Reserve, ECB, BoE, BoJ, RBA, BoC, SNB, RBNZ), economic indicators (CPI, PPI, GDP, NFP, Unemployment, PMI, Interest Rates), and commodities.
+- **Hybrid Multi-Tier Extraction**:
+  1. *Deterministic Matching*: Regex word-boundary scanning with canonical alias normalization (e.g., "Cable" -> GBP/USD, "Fiber" -> EUR/USD, "The Fed" -> Federal Reserve).
+  2. *Macro Transmission Engine*: Maps central bank rate decisions and macroeconomic shocks into defensible currency pair impacts without assuming every pair is affected.
+  3. *Selective Gemini Extraction*: Used when complex multi-clause geopolitical news requires deeper parsing; strictly whitelisted against the supported registry to reject fabricated ticker symbols (e.g. `XYZ/ABC`).
+  4. *Relationship Taxonomy*: Strictly distinguishes between **DIRECT** (explicitly mentioned in text), **INDIRECT** (defensible macroeconomic transmission channel), and **POTENTIAL** (uncertain spillover).
+  5. *Manual Correction Capability*: Analysts can inject manual overrides stored persistently for ongoing model calibration.
+
+### ⚡ 7. Market Impact Predictor (6-Dimension Quantitative Scoring Engine)
+- **4 Quantitative Impact Levels**: Configurable score boundaries:
+  - `LOW` (0–24): Limited market relevance or routine consensus recaps.
+  - `MEDIUM` (25–49): Moderate relevance to one or more currency pairs.
+  - `HIGH` (50–74): Substantial potential volatility and institutional relevance.
+  - `CRITICAL` (75–100): Exceptional event (e.g., emergency rate hike, bank collapse, geopolitical shock).
+- **6-Dimension Normalized Architecture (0–100)**:
+  - *Economic Importance* (25% weight): Systemic weight of the underlying event.
+  - *Surprise Magnitude* (20% weight): Deviation relative to consensus expectations.
+  - *Instrument Relevance* (20% weight): Directness of transmission to forex markets.
+  - *Source Reliability* (10% weight): Publisher trust score (Reuters, Bloomberg, Fed, WSJ).
+  - *News Novelty* (10% weight): Breaking event vs. routine follow-up recap.
+  - *Potential Volatility* (15% weight): Expected dispersion and liquidity conditions.
+- **Strict Directional Decoupling**: Impact score measures *magnitude and significance*, strictly separated from bullish/bearish direction. A critical event can be bullish, bearish, or directionally uncertain.
+- **13 Macro Event Categories**: `central_bank_decisions`, `interest_rate_announcements`, `inflation_releases`, `employment_reports`, `gdp_releases`, `geopolitical_events`, `elections`, `trade_restrictions`, `financial_crises`, `banking_events`, `commodity_supply_disruptions`, `unexpected_economic_announcements`, `other_financial_events`.
+- **Historical Context Windows & Zero Fabrication**: Supports evaluation windows (`15m`, `1h`, `4h`, `1d`) measuring realized return and volatility. When verified historical records do not exist, the engine explicitly outputs `historical_data_unavailable` with transparent rule-based labeling rather than hallucinating statistics.
+
+### 🔔 8. Market Intelligence Alert Dispatcher & Rule Manager
+- Real-time rule-based alerting engine triggered during news processing.
+- Configurable rules: `critical_impact`, `high_impact`, `instrument_mention`, and `confidence_threshold`.
+- In-app notification drawer with unread counter badge on the left navigation sidebar.
+- 1-click alert triage and mark-as-read tracking.
 
 ---
 
@@ -255,24 +288,31 @@ python demo.py gemini-3.5-flash-lite
 
 ## 8. Automated Testing & Verification
 
-The test suite validates Decider classification, policy thresholds, live RSS parsing, database schema migrations, and Google Gemini integration:
+The test suite validates Decider classification, policy thresholds, live RSS parsing, database schema migrations, Smart Ticker Detection, Market Impact scoring, alert dispatching, and Google Gemini integration:
 
 ```powershell
-# Run all 29 backend pytest tests
-pytest tests/ -v
+# Run the core Market Intelligence & NLP test suite (39 tests in ~2.8s)
+.\.venv\Scripts\python.exe -m pytest tests/test_ticker_detection.py tests/test_market_impact.py tests/test_intelligence_pipeline.py tests/test_intelligence_api.py -v
+
+# Run the complete backend test suite (67 unit & integration tests)
+.\.venv\Scripts\python.exe -m pytest tests/ -v
 ```
-*(All 29 tests pass with 100% compliance)*
 
 ```powershell
-# Run frontend build & type check
+# Run the frontend Vitest component test suite (12 tests)
 cd frontend
+npm test -- --run
+
+# Run full frontend production build & TypeScript type checking
 npm run build
 ```
+*(All 67 backend pytest tests and 12 frontend Vitest component tests pass with 100% compliance)*
 
 ---
 
 ## 9. API Reference
 
+### Core News, Market & Review Endpoints
 | Endpoint | Method | Description |
 | :--- | :--- | :--- |
 | `/api/health` | `GET` | Health check, model status, and database connectivity |
@@ -287,6 +327,19 @@ npm run build
 | `/api/review-queue/{id}/reclassify`| `POST` | Corrects label with reviewer notes while preserving original inference |
 | `/api/review-queue/{id}/dismiss` | `POST` | Dismisses signal from review queue with audit trail |
 | `/api/benchmarks/run` | `POST` | Executes automated benchmark comparing Decider gatekeeper vs baseline |
+
+### Market Intelligence, Smart Ticker & Impact Predictor Endpoints
+| Endpoint | Method | Description |
+| :--- | :--- | :--- |
+| `/api/intelligence/tickers` | `GET` | Supported currency pairs, entities, and instrument mention aggregation |
+| `/api/intelligence/impact` | `GET` | Impact level distribution (`LOW`, `MEDIUM`, `HIGH`, `CRITICAL`) and dimension averages |
+| `/api/intelligence/news/{article_id}` | `GET` | Full intelligence dossier: detected entities, affected instruments, 6 dimensions, and historical context |
+| `/api/intelligence/instruments/{symbol}` | `GET` | Deep dive on a specific instrument: total mentions, direct/indirect breakdown, and correlated news |
+| `/api/intelligence/alerts` | `GET` | Triggered alert notifications and active alert rules |
+| `/api/intelligence/alerts/rules` | `POST` | Creates a new real-time alerting rule (`critical_impact`, `instrument_mention`, etc.) |
+| `/api/intelligence/alerts/{alert_id}/read` | `POST` | Marks an alert notification as read |
+| `/api/intelligence/analyze/{article_id}` | `POST` | Re-evaluates an existing article through Ticker Detection & Impact Predictor |
+| `/api/intelligence/statistics` | `GET` | Overall aggregate intelligence metrics: average score, top events, and alert counts |
 
 ---
 
@@ -334,32 +387,63 @@ signalflow-ai/
 │   ├── metrics.py              # Latency distributions & cost formulas
 │   ├── pipeline.py             # End-to-end signal orchestration & batch evaluation
 │   ├── review_service.py       # Human-in-the-loop review queue management
-│   └── rss_service.py          # Real-time RSS feed ingestion & deduplication
+│   ├── rss_service.py          # Real-time RSS feed ingestion & deduplication
+│   ├── ticker_detection/       # FEATURE A: Smart Ticker Detection
+│   │   ├── __init__.py
+│   │   ├── registry.py         # Supported Forex & commodity universe with validation
+│   │   ├── entity_dictionary.json # Externalized maintainable aliases & entities
+│   │   ├── models.py           # Typed Pydantic schemas (Entities, Instruments)
+│   │   ├── matcher.py          # Deterministic regex entity extractor
+│   │   ├── relationship_engine.py # DIRECT, INDIRECT, POTENTIAL transmission mapping
+│   │   ├── gemini_extractor.py # Whitelisted Gemini-assisted extraction
+│   │   └── detector.py         # Master SmartTickerDetector service
+│   ├── market_impact/          # FEATURE B: Market Impact Predictor
+│   │   ├── __init__.py
+│   │   ├── models.py           # Typed Pydantic schemas (ImpactDimensions, HistoricalContext)
+│   │   ├── event_classifier.py # 13 macroeconomic event taxonomies
+│   │   ├── scoring.py          # 6-dimension weighted engine (LOW, MED, HIGH, CRIT)
+│   │   ├── historical_context.py # Realized returns (15m, 1h, 4h, 1d) & zero-fabrication
+│   │   └── predictor.py        # Master MarketImpactPredictor engine
+│   └── alerts/                 # Real-time Market Intelligence Alerts
+│       ├── __init__.py
+│       ├── models.py           # Alert & Rule data models
+│       └── alert_engine.py     # Rule evaluation & notification dispatcher
 ├── frontend/                   # React + Vite + Tailwind + TypeScript Application
 │   ├── index.html              # HTML shell with Inter & JetBrains Mono typography
 │   ├── package.json            # Node dependencies (React 19, Lucide, Recharts, Vite)
 │   ├── src/
 │   │   ├── App.tsx             # Root workspace layout & state orchestration
-│   │   ├── types/index.ts      # TypeScript definitions for signals, tickers, and KPIs
+│   │   ├── types/index.ts      # TypeScript definitions for signals, tickers, intelligence, and KPIs
 │   │   ├── lib/api-client.ts   # Typed API client for FastAPI backend
 │   │   ├── components/
-│   │   │   ├── layout/         # Header, Sidebar, and TopMarketRibbon
+│   │   │   ├── layout/         # Header, Sidebar (with Radar alert badge), and TopMarketRibbon
 │   │   │   └── market/         # StockDetailModal with live charts & correlation
 │   │   └── features/
 │   │       ├── news/           # NewsStreamPage with custom analyzer & dossier view
+│   │       ├── intelligence/   # React Market Intelligence Suite
+│   │       │   ├── MarketIntelligencePage.tsx # Master page with macro KPI bar & subtabs
+│   │       │   ├── SmartTickerDetectionPanel.tsx # Forex pair filters, badges & confidence slider
+│   │       │   ├── MarketImpactPanel.tsx # 6 dimension bars, level filters & distribution pie
+│   │       │   ├── NewsDetailModal.tsx # Full drill-down modal with transmission rationales
+│   │       │   └── AlertsManagerModal.tsx # Real-time notification drawer & rule builder
 │   │       ├── overview/       # KPIs, avoided cost metrics, and activity timeline
 │   │       ├── analysis/       # Dedicated Gemini research dossiers view
 │   │       ├── review-queue/   # Human-in-the-loop review queue interface
 │   │       ├── performance/    # Latency distributions and cost benchmark cards
 │   │       └── settings/       # Policy thresholds, model selection, and feed manager
-├── tests/                      # Automated test suite (29 Pytest tests)
+├── tests/                      # Automated test suite (67 Pytest tests + 12 Vitest tests)
+│   ├── test_ticker_detection.py# Smart ticker detection, aliases, and direct/indirect tests (17 tests)
+│   ├── test_market_impact.py   # 6-dimension scoring, 13 events, and decoupling tests (9 tests)
+│   ├── test_intelligence_pipeline.py # End-to-end pipeline intelligence integration (2 tests)
+│   ├── test_intelligence_api.py# FastAPI intelligence REST endpoints (11 tests)
 │   ├── test_classification.py  # Decider classification & threshold tests
 │   ├── test_database.py        # SQLite persistence & audit preservation tests
 │   ├── test_gemini.py          # Gemini mock, timeout & error tests
 │   ├── test_live_integration.py# Live Google Gemini & Decider endpoint tests
 │   ├── test_metrics.py         # Cost & latency formula validation tests
 │   ├── test_pipeline.py        # End-to-end pipeline tests
-│   └── test_rss.py             # RSS normalization & deduplication tests
+│   ├── test_rss.py             # RSS normalization & deduplication tests
+│   └── frontend/src/test/      # Vitest React component test suite (12 tests)
 ├── reusable_patterns/          # Independent policy pattern asset
 │   ├── financial_news_policy.py# Standalone reusable policy router
 │   └── README.md               # Pattern documentation & integration guide

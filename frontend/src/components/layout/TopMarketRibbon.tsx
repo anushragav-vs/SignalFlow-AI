@@ -188,19 +188,19 @@ export const TopMarketRibbon: React.FC<TopMarketRibbonProps> = ({ onSelectStock 
       {/* Interactive Ribbon Ticker Chips */}
       <div className="flex items-center gap-2.5 shrink-0">
         {tickers.map((t) => {
-          const displaySym = t.display_symbol || t.label || t.symbol.replace('^', '');
+          const displayLabel = t.label || t.display_symbol || t.symbol.replace('^', '');
           const isPos = t.is_positive || t.change_pct >= 0;
           return (
             <button
               key={t.symbol}
               type="button"
-              onClick={() => onSelectStock?.(displaySym)}
+              onClick={() => onSelectStock?.(t.symbol)}
               className="flex items-center gap-2 bg-[#0c1527] hover:bg-[#13223f] border border-[#1b2a47] hover:border-cyan-500/60 rounded-lg px-2.5 py-1 whitespace-nowrap cursor-pointer transition-all duration-150 group shadow-sm active:scale-95"
-              title={`Click to inspect ${displaySym} live market data, chart & news correlation`}
+              title={`Click to inspect ${displayLabel} live market data, chart & news correlation`}
             >
               <div className="flex items-center gap-1">
                 <span className="font-bold text-white group-hover:text-cyan-300 transition-colors font-mono">
-                  {displaySym}
+                  {displayLabel}
                 </span>
                 <span className="text-[9px] uppercase px-1 rounded bg-[#070d18] text-slate-400 font-mono">
                   {t.category}

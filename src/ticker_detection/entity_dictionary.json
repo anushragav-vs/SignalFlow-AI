@@ -1,0 +1,332 @@
+{
+  "version": "1.0.0",
+  "description": "SignalFlow AI Structured Financial Entity & Alias Dictionary",
+  "currencies": [
+    {
+      "code": "USD",
+      "name": "US Dollar",
+      "aliases": ["US Dollar", "U.S. Dollar", "American Dollar", "Greenback", "Buck", "Dollar"],
+      "country_or_region": "United States",
+      "requires_context": ["Dollar", "Buck"]
+    },
+    {
+      "code": "EUR",
+      "name": "Euro",
+      "aliases": ["Euro", "Single Currency", "Common Currency"],
+      "country_or_region": "Eurozone",
+      "requires_context": []
+    },
+    {
+      "code": "GBP",
+      "name": "British Pound",
+      "aliases": ["British Pound", "Pound Sterling", "Sterling", "Great British Pound", "Quid"],
+      "country_or_region": "United Kingdom",
+      "requires_context": ["Sterling"]
+    },
+    {
+      "code": "JPY",
+      "name": "Japanese Yen",
+      "aliases": ["Japanese Yen", "Yen"],
+      "country_or_region": "Japan",
+      "requires_context": []
+    },
+    {
+      "code": "AUD",
+      "name": "Australian Dollar",
+      "aliases": ["Australian Dollar", "Aussie Dollar", "Aussie"],
+      "country_or_region": "Australia",
+      "requires_context": ["Aussie"]
+    },
+    {
+      "code": "CAD",
+      "name": "Canadian Dollar",
+      "aliases": ["Canadian Dollar", "Loonie"],
+      "country_or_region": "Canada",
+      "requires_context": ["Loonie", "CAD"]
+    },
+    {
+      "code": "CHF",
+      "name": "Swiss Franc",
+      "aliases": ["Swiss Franc", "Swissie"],
+      "country_or_region": "Switzerland",
+      "requires_context": ["Swissie"]
+    },
+    {
+      "code": "NZD",
+      "name": "New Zealand Dollar",
+      "aliases": ["New Zealand Dollar", "Kiwi Dollar", "Kiwi"],
+      "country_or_region": "New Zealand",
+      "requires_context": ["Kiwi"]
+    },
+    {
+      "code": "XAU",
+      "name": "Gold",
+      "aliases": ["Gold", "Spot Gold", "Yellow Metal", "Bullion"],
+      "country_or_region": "Global Commodity",
+      "requires_context": []
+    }
+  ],
+  "central_banks": [
+    {
+      "name": "Federal Reserve",
+      "entity_type": "central_bank",
+      "primary_currency": "USD",
+      "region": "United States",
+      "aliases": [
+        "Federal Reserve",
+        "The Fed",
+        "Fed",
+        "FOMC",
+        "Federal Open Market Committee",
+        "Jerome Powell",
+        "Chair Powell",
+        "US Central Bank",
+        "U.S. Central Bank"
+      ],
+      "requires_context": ["Fed"]
+    },
+    {
+      "name": "European Central Bank",
+      "entity_type": "central_bank",
+      "primary_currency": "EUR",
+      "region": "Eurozone",
+      "aliases": [
+        "European Central Bank",
+        "ECB",
+        "Christine Lagarde",
+        "Governing Council of the ECB"
+      ],
+      "requires_context": []
+    },
+    {
+      "name": "Bank of England",
+      "entity_type": "central_bank",
+      "primary_currency": "GBP",
+      "region": "United Kingdom",
+      "aliases": [
+        "Bank of England",
+        "BoE",
+        "BOE",
+        "Monetary Policy Committee",
+        "Andrew Bailey"
+      ],
+      "requires_context": []
+    },
+    {
+      "name": "Bank of Japan",
+      "entity_type": "central_bank",
+      "primary_currency": "JPY",
+      "region": "Japan",
+      "aliases": [
+        "Bank of Japan",
+        "BoJ",
+        "BOJ",
+        "Kazuo Ueda",
+        "Governor Ueda"
+      ],
+      "requires_context": []
+    },
+    {
+      "name": "Reserve Bank of Australia",
+      "entity_type": "central_bank",
+      "primary_currency": "AUD",
+      "region": "Australia",
+      "aliases": [
+        "Reserve Bank of Australia",
+        "RBA",
+        "Michele Bullock",
+        "Governor Bullock"
+      ],
+      "requires_context": []
+    },
+    {
+      "name": "Bank of Canada",
+      "entity_type": "central_bank",
+      "primary_currency": "CAD",
+      "region": "Canada",
+      "aliases": [
+        "Bank of Canada",
+        "BoC",
+        "BOC",
+        "Tiff Macklem",
+        "Governor Macklem"
+      ],
+      "requires_context": []
+    },
+    {
+      "name": "Swiss National Bank",
+      "entity_type": "central_bank",
+      "primary_currency": "CHF",
+      "region": "Switzerland",
+      "aliases": [
+        "Swiss National Bank",
+        "SNB",
+        "Martin Schlegel",
+        "Thomas Jordan"
+      ],
+      "requires_context": []
+    },
+    {
+      "name": "Reserve Bank of New Zealand",
+      "entity_type": "central_bank",
+      "primary_currency": "NZD",
+      "region": "New Zealand",
+      "aliases": [
+        "Reserve Bank of New Zealand",
+        "RBNZ",
+        "Adrian Orr",
+        "Governor Orr"
+      ],
+      "requires_context": []
+    }
+  ],
+  "economic_entities": [
+    {
+      "name": "CPI",
+      "category": "inflation",
+      "event_type": "cpi_release",
+      "aliases": [
+        "CPI",
+        "Consumer Price Index",
+        "Consumer Prices",
+        "Consumer Inflation",
+        "Core CPI",
+        "Headline CPI"
+      ]
+    },
+    {
+      "name": "PPI",
+      "category": "inflation",
+      "event_type": "ppi_release",
+      "aliases": [
+        "PPI",
+        "Producer Price Index",
+        "Producer Prices",
+        "Wholesale Inflation",
+        "Core PPI"
+      ]
+    },
+    {
+      "name": "GDP",
+      "category": "growth",
+      "event_type": "gdp_release",
+      "aliases": [
+        "GDP",
+        "Gross Domestic Product",
+        "Economic Growth",
+        "Quarterly GDP",
+        "Annual GDP"
+      ]
+    },
+    {
+      "name": "NFP",
+      "category": "employment",
+      "event_type": "nfp_release",
+      "aliases": [
+        "NFP",
+        "Non-Farm Payrolls",
+        "Nonfarm Payrolls",
+        "US Jobs Report",
+        "Nonfarm Employment",
+        "Payrolls"
+      ],
+      "requires_context": ["Payrolls"]
+    },
+    {
+      "name": "Unemployment",
+      "category": "employment",
+      "event_type": "unemployment_rate",
+      "aliases": [
+        "Unemployment Rate",
+        "Jobless Claims",
+        "Initial Jobless Claims",
+        "Unemployment",
+        "Jobless Rate"
+      ]
+    },
+    {
+      "name": "PMI",
+      "category": "activity",
+      "event_type": "pmi_release",
+      "aliases": [
+        "PMI",
+        "Purchasing Managers Index",
+        "Manufacturing PMI",
+        "Services PMI",
+        "Composite PMI",
+        "ISM Manufacturing",
+        "ISM Services"
+      ]
+    },
+    {
+      "name": "Interest Rate Decisions",
+      "category": "monetary_policy",
+      "event_type": "interest_rate_decision",
+      "aliases": [
+        "Interest Rate Decision",
+        "Interest Rate Increase",
+        "Interest Rate Cut",
+        "Interest Rates",
+        "Interest Rate",
+        "Rate Hike",
+        "Rate Cut",
+        "Rate Increase",
+        "Rate Decision",
+        "Benchmark Rate",
+        "Monetary Policy Decision",
+        "Policy Rate",
+        "Rates Unchanged"
+      ]
+    },
+    {
+      "name": "Inflation",
+      "category": "inflation",
+      "event_type": "inflation_overview",
+      "aliases": [
+        "Inflation",
+        "Inflation Rate",
+        "Core Inflation",
+        "Headline Inflation",
+        "Price Pressures",
+        "PCE Price Index",
+        "Core PCE"
+      ]
+    },
+    {
+      "name": "Retail Sales",
+      "category": "consumption",
+      "event_type": "retail_sales",
+      "aliases": [
+        "Retail Sales",
+        "Core Retail Sales",
+        "Consumer Spending"
+      ]
+    },
+    {
+      "name": "Trade Balance",
+      "category": "trade",
+      "event_type": "trade_balance",
+      "aliases": [
+        "Trade Balance",
+        "Trade Deficit",
+        "Trade Surplus",
+        "Current Account Balance"
+      ]
+    }
+  ],
+  "forex_pair_aliases": {
+    "EUR/USD": ["EURUSD", "EUR/USD", "EUR-USD", "Euro Dollar", "Euro versus US Dollar", "Fiber"],
+    "GBP/USD": ["GBPUSD", "GBP/USD", "GBP-USD", "Cable", "Pound Dollar", "Sterling Dollar"],
+    "USD/JPY": ["USDJPY", "USD/JPY", "USD-JPY", "Dollar Yen", "Gopher"],
+    "AUD/USD": ["AUDUSD", "AUD/USD", "AUD-USD", "Aussie Dollar", "Aussie", "Aussie Greenback"],
+    "USD/CAD": ["USDCAD", "USD/CAD", "USD-CAD", "Dollar Loonie", "Loonie"],
+    "USD/CHF": ["USDCHF", "USD/CHF", "USD-CHF", "Dollar Swiss", "Swissie"],
+    "NZD/USD": ["NZDUSD", "NZD/USD", "NZD-USD", "Kiwi Dollar", "Kiwi"],
+    "EUR/GBP": ["EURGBP", "EUR/GBP", "EUR-GBP", "Euro Sterling", "Chunnel"],
+    "EUR/JPY": ["EURJPY", "EUR/JPY", "EUR-JPY", "Euro Yen", "Eppy"],
+    "GBP/JPY": ["GBPJPY", "GBP/JPY", "GBP-JPY", "Pound Yen", "Guppy", "Geppy"],
+    "AUD/JPY": ["AUDJPY", "AUD/JPY", "AUD-JPY", "Aussie Yen"],
+    "XAU/USD": ["XAUUSD", "XAU/USD", "XAU-USD", "Gold Dollar", "Spot Gold", "Gold Spot"]
+  }
+}
+

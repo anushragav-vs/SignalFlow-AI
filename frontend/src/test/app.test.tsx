@@ -132,9 +132,9 @@ describe('SignalFlow AI - Frontend Component Test Suite', () => {
       />
     );
 
-    // Initial state shows both headlines
+    // Initial state shows financial headlines
     expect(screen.getByText(/Nvidia reports record earnings/i)).toBeInTheDocument();
-    expect(screen.getByText(/Celebrity spotted/i)).toBeInTheDocument();
+    expect(screen.getByText(/Unconfirmed rumor of regional bank merger talks/i)).toBeInTheDocument();
 
     // Type in search query
     const searchInput = screen.getByPlaceholderText(/Search Ticker or Headline/i);
@@ -142,7 +142,7 @@ describe('SignalFlow AI - Frontend Component Test Suite', () => {
 
     // Only Nvidia should remain visible
     expect(screen.getByText(/Nvidia reports record earnings/i)).toBeInTheDocument();
-    expect(screen.queryByText(/Celebrity spotted/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Unconfirmed rumor of regional bank merger talks/i)).not.toBeInTheDocument();
   });
 
   it('renders PerformancePage with recommended Strands Decider 2B card', () => {

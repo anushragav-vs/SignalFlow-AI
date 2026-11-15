@@ -10,6 +10,7 @@ export interface Signal {
   headline: string;
   canonical_url: string;
   publisher: string;
+  article_body?: string;
   is_live: number | boolean;
   decider_sentiment: MarketSentiment;
   decider_confidence: number;
@@ -42,6 +43,148 @@ export interface Signal {
   output_tokens?: number;
   total_tokens?: number;
   estimated_cost_usd: number;
+
+  // Market Intelligence & Smart Ticker Detection
+  detected_entities?: DetectedEntity[];
+  affected_instruments?: AffectedInstrument[];
+  currencies?: string[];
+  economic_events?: string[];
+  impact_score?: number;
+  impact_level?: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+  impact_dimensions?: ImpactDimensions;
+  event_category?: string;
+  volatility_assessment?: 'low' | 'moderate' | 'elevated' | 'extreme';
+  impact_explanation?: string;
+  impact_methodology?: string;
+  impact_limitations?: string[];
+  historical_context?: HistoricalContext;
+}
+
+export interface DetectedEntity {
+  name: string;
+  entity_type: 'forex_pair' | 'currency' | 'central_bank' | 'economic_indicator' | 'commodity' | string;
+  mention_type: 'explicit' | 'implicit' | 'contextual' | string;
+  raw_match?: string;
+  confidence?: number;
+}
+
+export interface AffectedInstrument {
+  symbol: string;
+  relationship: 'direct' | 'indirect' | 'potential';
+  confidence: number;
+  reason: string;
+  mentioned_explicitly: boolean;
+  potential_direction?: 'bullish' | 'bearish' | 'mixed' | 'uncertain';
+}
+
+export interface ImpactDimensions {
+  economic_importance: number;
+  surprise_magnitude: number;
+  instrument_relevance: number;
+  source_reliability: number;
+  news_novelty: number;
+  potential_volatility: number;
+}
+
+export interface HistoricalReactionWindow {
+  status: string;
+  absolute_return_pct?: number | null;
+  signed_return_pct?: number | null;
+  realized_volatility_pct?: number | null;
+  max_favorable_move_pct?: number | null;
+  max_adverse_move_pct?: number | null;
+}
+
+export interface HistoricalContext {
+  has_historical_data: boolean;
+  data_status: string;
+  methodology: string;
+  windows: Record<string, HistoricalReactionWindow>;
+  disclaimer: string;
+}
+
+export interface MarketAlert {
+  id: number;
+  signal_id: number;
+  rule_id?: number;
+  alert_type: string;
+  title: string;
+  message: string;
+  severity: 'info' | 'warning' | 'critical';
+  created_at: string;
+  is_read: boolean;
+}
+
+export interface AlertRule {
+  id: number;
+  name: string;
+  condition_type: string;
+  target_value?: string | null;
+  min_confidence: number;
+  enabled: boolean;
+  created_at: string;
+}
+
+export interface SupportedInstrument {
+  symbol: string;
+  name: string;
+  base_currency: string;
+  quote_currency: string;
+  category: string;
+  aliases: string[];
+}
+
+export interface InstrumentSummary {
+  symbol: string;
+  name: string;
+  base_currency: string;
+  quote_currency: string;
+  total_mentions: number;
+  direct_count: number;
+  indirect_count: number;
+  potential_count: number;
+  avg_impact_score: number;
+  dominant_sentiment: string;
+  sentiments: Record<string, number>;
+}
+
+export interface ForexInstrumentDetail {
+  symbol: string;
+  name: string;
+  base_currency: string;
+  quote_currency: string;
+  category: string;
+  aliases: string[];
+  total_correlated_signals: number;
+  direct_count: number;
+  indirect_count: number;
+  potential_count: number;
+  average_impact_score: number;
+  critical_events_count: number;
+  high_events_count: number;
+  highest_impact_news?: Signal | null;
+  relationship_counts: Record<string, number>;
+  sentiment_counts: Record<string, number>;
+  dominant_sentiment: string;
+  sentiment_score: number;
+  related_central_banks: string[];
+  related_currencies: string[];
+  macro_indicators: string[];
+  historical_reaction?: HistoricalContext | null;
+  market_quote?: any;
+  signals: Signal[];
+}
+
+export interface IntelligenceStats {
+  total_analyzed: number;
+  avg_impact_score: number;
+  critical_count: number;
+  high_count: number;
+  medium_count: number;
+  low_count: number;
+  top_events: Array<{ category: string; count: number }>;
+  total_alerts: number;
+  unread_alerts: number;
 }
 
 export interface MarketTicker {

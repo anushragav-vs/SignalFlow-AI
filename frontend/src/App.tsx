@@ -7,6 +7,7 @@ import { Sidebar } from './components/layout/Sidebar';
 import type { NavTab } from './components/layout/Sidebar';
 import { NewsStreamPage } from './features/news/NewsStreamPage';
 import { OverviewPage } from './features/overview/OverviewPage';
+import { MarketIntelligencePage } from './features/intelligence/MarketIntelligencePage';
 import { AnalysisPage } from './features/analysis/AnalysisPage';
 import { ReviewQueuePage } from './features/review-queue/ReviewQueuePage';
 import { PerformancePage } from './features/performance/PerformancePage';
@@ -25,6 +26,7 @@ export const App: React.FC = () => {
   const [appConfig, setAppConfig] = useState<AppConfig | null>(null);
   const [feeds, setFeeds] = useState<Record<string, string>>({});
   const [reviewItems, setReviewItems] = useState<Signal[]>([]);
+  const [unreadAlertCount, setUnreadAlertCount] = useState<number>(0);
   const [selectedStock, setSelectedStock] = useState<string | null>(null);
 
   // UI Status
@@ -40,13 +42,14 @@ export const App: React.FC = () => {
     setErrorMessage(null);
 
     try {
-      const [healthData, kpiData, signalData, feedData, configData, reviewData] = await Promise.all([
+      const [healthData, kpiData, signalData, feedData, configData, reviewData, alertData] = await Promise.all([
         api.getHealth(),
         api.getKPIs(),
         api.getSignals({ limit: 80 }),
         api.getFeeds(),
         api.getConfig(),
         api.getReviewQueue(),
+        api.getIntelligenceAlerts().catch(() => ({ rules: [], alerts: [], unread_count: 0 })),
       ]);
 
       setHealth(healthData);
@@ -55,6 +58,9 @@ export const App: React.FC = () => {
       setFeeds(feedData);
       setAppConfig(configData);
       setReviewItems(reviewData);
+      if (alertData && typeof alertData.unread_count === 'number') {
+        setUnreadAlertCount(alertData.unread_count);
+      }
       setIsBackendConnected(true);
     } catch (err: any) {
       console.error('Failed to load backend data:', err);
@@ -159,6 +165,7 @@ export const App: React.FC = () => {
           activeTab={activeTab}
           onSelectTab={setActiveTab}
           pendingReviewCount={reviewItems.length}
+          unreadAlertCount={unreadAlertCount}
           collapsed={collapsedSidebar}
           onToggleCollapse={() => setCollapsedSidebar(!collapsedSidebar)}
         />
@@ -219,6 +226,15 @@ export const App: React.FC = () => {
                   signals={signals}
                   feeds={feeds}
                   onRefreshSignals={refreshSignalsOnly}
+                  onSelectStock={setSelectedStock}
+                />
+              )}
+
+              {/* Tab 2: Market Intelligence (Smart Tickers & Impact Predictor) */}
+              {activeTab === 'intelligence' && (
+                <MarketIntelligencePage
+                  signals={signals}
+                  onRefreshAll={() => loadData(true)}
                   onSelectStock={setSelectedStock}
                 />
               )}
